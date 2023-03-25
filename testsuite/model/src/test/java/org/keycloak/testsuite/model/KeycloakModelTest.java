@@ -277,9 +277,9 @@ public abstract class KeycloakModelTest {
           Stream.of(basicParameters),
           Stream.of(System.getProperty("keycloak.model.parameters", "").split("\\s*,\\s*"))
             .filter(s -> s != null && ! s.trim().isEmpty())
-            .map(cn -> { try { return Class.forName(cn.indexOf('.') >= 0 ? cn : ("org.keycloak.testsuite.model.parameters." + cn)); } catch (Exception e) { LOG.error("Cannot find " + cn); return null; }})
+            .map(cn -> { try { return Class.forName(cn.indexOf('.') >= 0 ? cn : ("org.keycloak.testsuite.model.parameters." + cn)); } catch (Exception e) { throw new RuntimeException("Cannot find class " + cn, e); }})
             .filter(Objects::nonNull)
-            .map(c -> { try { return c.getDeclaredConstructor().newInstance(); } catch (Exception e) { LOG.error("Cannot instantiate " + c); return null; }} )
+            .map(c -> { try { return c.getDeclaredConstructor().newInstance(); } catch (Exception e) { throw new RuntimeException("Cannot instantiate class " + c, e); }} )
             .filter(KeycloakModelParameters.class::isInstance)
             .map(KeycloakModelParameters.class::cast)
           )

@@ -19,7 +19,6 @@ package org.keycloak.testsuite.model.session;
 
 import org.infinispan.client.hotrod.RemoteCache;
 import org.junit.Test;
-import org.keycloak.device.DeviceRepresentationProvider;
 import org.keycloak.models.AuthenticatedClientSessionModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.Constants;
@@ -44,7 +43,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 @RequireProvider(UserSessionProvider.class)
 @RequireProvider(value = HotRodConnectionProvider.class, only = DefaultHotRodConnectionProviderFactory.PROVIDER_ID)
-@RequireProvider(DeviceRepresentationProvider.class)
 public class HotRodUserSessionClientSessionRelationshipTest extends KeycloakModelTest {
 
     private String realmId;
@@ -127,7 +125,7 @@ public class HotRodUserSessionClientSessionRelationshipTest extends KeycloakMode
 
     private void prepareSessions(AtomicReference<String> uSessionId, AtomicReference<String> cSessionId) {
         withRealm(realmId, (session, realm) -> {
-            UserSessionModel uSession = session.sessions().createUserSession(realm, session.users().getUserByUsername(realm, "user1"), "user1", "127.0.0.1", "form", true, null, null);
+            UserSessionModel uSession = session.sessions().createUserSession(null, realm, session.users().getUserByUsername(realm, "user1"), "user1", "127.0.0.1", "form", true, null, null, UserSessionModel.SessionPersistenceState.PERSISTENT);
             ClientModel client = realm.getClientByClientId(CLIENT0_CLIENT_ID);
 
             AuthenticatedClientSessionModel cSession = session.sessions().createClientSession(realm, client, uSession);

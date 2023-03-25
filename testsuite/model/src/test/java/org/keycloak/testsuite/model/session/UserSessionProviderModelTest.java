@@ -20,7 +20,6 @@ import org.hamcrest.Matchers;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.junit.Assert;
 import org.junit.Test;
-import org.keycloak.device.DeviceRepresentationProvider;
 import org.keycloak.models.AuthenticatedClientSessionModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.Constants;
@@ -70,7 +69,6 @@ import static org.keycloak.testsuite.model.session.UserSessionPersisterProviderT
 @RequireProvider(UserSessionProvider.class)
 @RequireProvider(UserProvider.class)
 @RequireProvider(RealmProvider.class)
-@RequireProvider(DeviceRepresentationProvider.class)
 public class UserSessionProviderModelTest extends KeycloakModelTest {
 
     private String realmId;
@@ -303,7 +301,7 @@ public class UserSessionProviderModelTest extends KeycloakModelTest {
         inIndependentFactories(4, 30, () -> {
             withRealm(realmId, (session, realm) -> {
                 UserModel user = session.users().getUserByUsername(realm, "user1");
-                UserSessionModel userSession = session.sessions().createUserSession(realm, user, "user1", "", "", false, null, null);
+                UserSessionModel userSession = session.sessions().createUserSession(null, realm, user, "user1", "", "", false, null, null, UserSessionModel.SessionPersistenceState.PERSISTENT);
                 userSessionIds.add(userSession.getId());
 
                 latch.countDown();
